@@ -1,25 +1,36 @@
 const express = require('express');
-const Pinterest = require('pinterest-scraper');
+const { pinterest } = require('pinterest-dl');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// API එන්ඩ්පොයින්ට් එක
 app.get('/pinterest', async (req, res) => {
     const query = req.query.text;
-    if (!query) return res.json({ success: false, message: "Query එකක් දෙන්න!" });
+    
+    if (!query) {
+        return res.json({ 
+            success: false, 
+            message: "කරුණාකර සෙවුම් පදයක් ලබා දෙන්න (උදා: /pinterest?text=cat)" 
+        });
+    }
 
     try {
-        const data = await Pinterest.search(query);
-        // ප්‍රතිඵල 10ක් විතරක් ගමු
-        const results = data.slice(0, 10);
+        const data = await pinterest(query);
         
+        if (!data || data.length === 0) {
+            return res.json({ success: false, message: "පින්තූර සොයාගත නොහැකි විය." });
+        }
+
         res.json({
-            creator: "Mr Hashuu",
+            creator: "Mr Hashuu Bot",
             success: true,
-            result: results
+            result: data // මෙහි පින්තූර ලින්ක් අඩංගු වේ
         });
     } catch (error) {
         res.json({ success: false, message: "Error: " + error.message });
     }
 });
 
-app.listen(PORT, () => console.log(`API Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`✅ API Server is running on port ${PORT}`);
+});
