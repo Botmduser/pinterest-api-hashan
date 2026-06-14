@@ -1,21 +1,18 @@
 const express = require('express');
-const { pinterest } = require('pinterest-dl');
+const pinterest = require('pinterest-dl');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// API එන්ඩ්පොයින්ට් එක
 app.get('/pinterest', async (req, res) => {
     const query = req.query.text;
     
     if (!query) {
-        return res.json({ 
-            success: false, 
-            message: "කරුණාකර සෙවුම් පදයක් ලබා දෙන්න (උදා: /pinterest?text=cat)" 
-        });
+        return res.json({ success: false, message: "Query එකක් දෙන්න!" });
     }
 
     try {
-        const data = await pinterest(query);
+        // මෙතනදී පින්තූර අදින ක්‍රමය
+        const data = await pinterest.pinterest(query);
         
         if (!data || data.length === 0) {
             return res.json({ success: false, message: "පින්තූර සොයාගත නොහැකි විය." });
@@ -24,7 +21,7 @@ app.get('/pinterest', async (req, res) => {
         res.json({
             creator: "Mr Hashuu Bot",
             success: true,
-            result: data // මෙහි පින්තූර ලින්ක් අඩංගු වේ
+            result: data
         });
     } catch (error) {
         res.json({ success: false, message: "Error: " + error.message });
