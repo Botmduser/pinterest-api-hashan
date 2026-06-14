@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const cheerio = require('cheerio');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -9,20 +8,15 @@ app.get('/pinterest', async (req, res) => {
     if (!query) return res.json({ success: false, message: "Query එකක් දෙන්න!" });
 
     try {
-        const url = `https://www.pinterest.com/search/pins/?q=${encodeURIComponent(query)}`;
-        const { data } = await axios.get(url);
-        const $ = cheerio.load(data);
+        // අපි මෙතනදී කෙලින්ම API එකක් පාවිච්චි කරනවා
+        const response = await axios.get(`https://apis.davidcyriltech.my.id/search/pinterest?text=${encodeURIComponent(query)}`);
         
-        const results = [];
-        $('img').each((i, el) => {
-            const src = $(el).attr('src');
-            if (src && src.includes('pinimg.com')) {
-                results.push(src);
-            }
-        });
-
-        const uniqueResults = [...new Set(results)].slice(0, 10);
-        res.json({ success: true, result: uniqueResults });
+        // රිසාල්ට්ස් ටික හරියටම ගන්නවා
+        if (response.data && response.data.result) {
+            res.json({ success: true, result: response.data.result });
+        } else {
+            res.json({ success: false, message: "No results found" });
+        }
     } catch (e) {
         res.json({ success: false, message: e.message });
     }
