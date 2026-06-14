@@ -1,7 +1,6 @@
 {
   "name": "pinterest-api",
   "version": "1.0.0",
-  "description": "My own Pinterest API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -9,8 +8,6 @@
   "dependencies": {
     "axios": "^1.7.0",
     "express": "^4.19.2",
-    "pinterest-scraper": "^1.0.12"
-  },
-  "author": "Mr Hashuu",
-  "license": "ISC"
+    "pinterest-dl": "^1.0.0"
+  }
 }
