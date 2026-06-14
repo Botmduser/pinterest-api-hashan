@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "pinterest-dl": "^1.0.0"
+    "peth-pinterest": "^1.0.1"
   }
 }
